@@ -41,6 +41,7 @@ public class CalculateSales {
 		}
 
 		// ※ここから集計処理を作成してください。(処理内容2-1、2-2)
+
 		File[] files = new File(args[0]).listFiles();
 		List<File> rcdFiles = new ArrayList<>();
 
@@ -80,6 +81,7 @@ public class CalculateSales {
 
 
 
+
 		// 支店別集計ファイル書き込み処理
 		if(!writeFile(args[0], FILE_NAME_BRANCH_OUT, branchNames, branchSales)) {
 			return;
@@ -108,11 +110,13 @@ public class CalculateSales {
 			// 一行ずつ読み込む
 			while((line = br.readLine()) != null) {
 				// ※ここの読み込み処理を変更してください。(処理内容1-2)
+
 				//System.out.println(line);
 
 				String[] items = line.split(",");
 				branchNames.put(items[0], items[1]);
 			    branchSales.put(items[0], (long)0);
+
 			}
 
 		} catch(IOException e) {
@@ -144,6 +148,7 @@ public class CalculateSales {
 	 */
 	private static boolean writeFile(String path, String fileName, Map<String, String> branchNames, Map<String, Long> branchSales) {
 		// ※ここに書き込み処理を作成してください。(処理内容3-1)
+
 
 		BufferedWriter bw = null;
 
