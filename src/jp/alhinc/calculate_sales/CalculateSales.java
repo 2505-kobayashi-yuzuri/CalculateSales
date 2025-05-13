@@ -29,56 +29,56 @@ public class CalculateSales {
 	 *
 	 * @param コマンドライン引数
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		// 支店コードと支店名を保持するMap
 		Map<String, String> branchNames = new HashMap<>();
 		// 支店コードと売上金額を保持するMap
 		Map<String, Long> branchSales = new HashMap<>();
 		// 支店定義ファイル読み込み処理
-		if(!readFile(args[0], FILE_NAME_BRANCH_LST, branchNames, branchSales)) {
+		if(!readFile(args[0], FILE_NAME_BRANCH_LST, branchNames, branchSales)){
 			return;
 		}
 		File[] files = new File(args[0]).listFiles();
 		List<File> rcdFiles = new ArrayList<>();
 
-		for(int i = 0; i < files.length; i++) {
+		for(int i = 0; i < files.length; i++){
 			String fileName = files[i].getName();
-			if(fileName.matches("^[0-9]{8}.rcd$")) {
+			if(fileName.matches("^[0-9]{8}.rcd$")){
 				rcdFiles.add(files[i]);
 			}
 		}
 		//ファイル数分繰り返す
-		for(int i = 0; i < rcdFiles.size(); i++) {
+		for(int i = 0; i < rcdFiles.size(); i++){
 			BufferedReader br = null;
-			try {
+			try{
 				//rcdFilesを読み取り
 				FileReader fr = new FileReader(rcdFiles.get(i));
 				br = new BufferedReader(fr);
 				String line;
-				List <String> dataList = new ArrayList<String>();
+				List <String> saleList = new ArrayList<String>();
 				//ファイルデータの2行の文字列をキーとバリューに分割
 				//売り上げファイルの行数分繰り返す(2回文)
 				while((line = br.readLine()) != null) {
-					dataList.add(line);
+					saleList.add(line);
 				}
-				long fileSale = Long.parseLong(dataList.get(1));
-				Long saleAmount = branchSales.get(dataList.get(0)) + fileSale;
+				long fileSale = Long.parseLong(saleList.get(1));
+				Long saleAmount = branchSales.get(saleList.get(0)) + fileSale;
 				//更新した支店の売り上げをMapに格納
-				branchSales.put(dataList.get(0), saleAmount);
+				branchSales.put(saleList.get(0), saleAmount);
 			}catch(IOException e){
 				System.out.println(UNKNOWN_ERROR);
-			}finally {
-				if(br != null) {
+			}finally{
+				if(br != null){
 					try {
 						br.close();
 					} catch (IOException e) {
 						System.out.println(UNKNOWN_ERROR);
 						return ;
 					}
+				}
 			}
-		}
 		// 支店別集計ファイル書き込み処理
-			if(!writeFile(args[0], FILE_NAME_BRANCH_OUT, branchNames, branchSales)) {
+			if(!writeFile(args[0], FILE_NAME_BRANCH_OUT, branchNames, branchSales)){
 			return;
 			}
 		}
@@ -117,7 +117,7 @@ public class CalculateSales {
 				try {
 					// ファイルを閉じる
 					br.close();
-				}catch(IOException e) {
+				}catch(IOException e){
 					System.out.println(UNKNOWN_ERROR);
 					return false;
 				}
@@ -146,7 +146,7 @@ public class CalculateSales {
 			FileWriter fw = new FileWriter(file);
 			bw = new BufferedWriter(fw);
 			//すべての支店を書き込むまで繰り返し
-			for(String key : branchNames.keySet()) {
+			for(String key : branchNames.keySet()){
 				//支店の書き込み
 				bw.write(key);
 				bw.write(",");
@@ -157,14 +157,14 @@ public class CalculateSales {
 				//改行
 				bw.newLine();
 			}
-		}catch(IOException e) {
+		}catch(IOException e){
 			System.out.println(UNKNOWN_ERROR);
 			return false;
 		}finally{
-			if(bw != null) {
+			if(bw != null){
 				try {
 					bw.close();
-				} catch (IOException e) {
+				} catch (IOException e){
 					System.out.println(UNKNOWN_ERROR);
 					return false;
 				}
