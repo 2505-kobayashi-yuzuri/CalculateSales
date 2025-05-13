@@ -116,7 +116,7 @@ public class CalculateSales {
 			}
 
 		} catch(IOException e) {
-			System.out.println(UNKNOWN_ERROR);
+			System.out.println(FILE_NOT_EXIST);
 			return false;
 		} finally {
 			// ファイルを開いている場合
@@ -125,7 +125,7 @@ public class CalculateSales {
 					// ファイルを閉じる
 					br.close();
 				} catch(IOException e) {
-					System.out.println(UNKNOWN_ERROR);
+					System.out.println(FILE_NOT_EXIST);
 					return false;
 				}
 			}
