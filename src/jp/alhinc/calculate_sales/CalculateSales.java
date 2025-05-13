@@ -1,8 +1,10 @@
 package jp.alhinc.calculate_sales;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +41,7 @@ public class CalculateSales {
 		}
 
 		// ※ここから集計処理を作成してください。(処理内容2-1、2-2)
-		File[] files = new File("C:/Users/trainee1202/Desktop/売り上げ集計課題").listFiles();
+		File[] files = new File(args[0]).listFiles();
 		List<File> rcdFiles = new ArrayList<>();
 
 		for(int i = 0 ; i < files.length ; i++) {
@@ -143,6 +145,38 @@ public class CalculateSales {
 	private static boolean writeFile(String path, String fileName, Map<String, String> branchNames, Map<String, Long> branchSales) {
 		// ※ここに書き込み処理を作成してください。(処理内容3-1)
 
+		BufferedWriter bw = null;
+
+		try {
+			//書き込み先の指定
+			File file = new File(path, fileName);
+			FileWriter fw = new FileWriter(file);
+			bw = new BufferedWriter(fw);
+			//すべての支店を書き込むまで繰り返し
+			for(String key : branchNames.keySet()) {
+				//支店の書き込み
+				bw.write(key);
+				bw.write(",");
+				bw.write(branchNames.get(key));
+				bw.write(",");
+				String longString = String.valueOf(branchSales.get(key));
+				bw.write(longString);
+				//改行
+				bw.newLine();
+			}
+		} catch(IOException e) {
+			System.out.println("例外が発生しました。");
+			System.out.println(e);
+		} finally {
+			if(bw != null) {
+				try {
+					bw.close();
+				} catch (IOException e) {
+					System.out.println("close処理中に例外が発生しました。");
+					System.out.println(e);
+				}
+			}
+		}
 		return true;
 	}
 
