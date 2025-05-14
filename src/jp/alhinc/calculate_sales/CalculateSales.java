@@ -33,6 +33,10 @@ public class CalculateSales {
 	 * @param コマンドライン引数
 	 */
 	public static void main(String[] args) {
+		if (args.length != 1) {
+			System.out.println(UNKNOWN_ERROR);
+			return;
+		}
 		// 支店コードと支店名を保持するMap
 		Map<String, String> branchNames = new HashMap<>();
 		// 支店コードと売上金額を保持するMap
@@ -43,10 +47,8 @@ public class CalculateSales {
 		}
 		File[] files = new File(args[0]).listFiles();
 		List<File> rcdFiles = new ArrayList<>();
-
 		for(int i = 0; i < files.length; i++) {
-			String fileName = files[i].getName();
-			if(fileName.matches("^[0-9]{8}.rcd$")) {
+			if(files[i].isFile() && files[i].getName().matches("^[0-9]{8}.rcd$")) {
 				rcdFiles.add(files[i]);
 			}
 		}
@@ -81,6 +83,11 @@ public class CalculateSales {
 				if(!branchNames.containsKey(saleList.get(0))) {
 				    System.out.println(rcdFiles.get(i).getName() + BURANCHCODE_INVALID_FORMAT);
 				    return;
+				}
+				//売り上げ金額が数字ではないときのエラー処理
+				if(!saleList.get(1).matches("^[0-9]+$")) {
+					System.out.println(UNKNOWN_ERROR);
+					return;
 				}
 				long fileSale = Long.parseLong(saleList.get(1));
 				Long saleAmount = branchSales.get(saleList.get(0)) + fileSale;
