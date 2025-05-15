@@ -20,6 +20,12 @@ public class CalculateSales {
 	// 支店別集計ファイル名
 	private static final String FILE_NAME_BRANCH_OUT = "branch.out";
 
+	//new商品定義ファイル名
+	private static final String FILE_NAME_COMMODITY_LIST = "commodity.lst";
+
+	//new商品別ファイル名
+	private static final String FILE_NAME_COMMODITY_OUT = "commodity.out";
+
 	// エラーメッセージ
 	private static final String UNKNOWN_ERROR = "予期せぬエラーが発生しました";
 	private static final String FILE_NOT_EXIST = "支店定義ファイルが存在しません";
@@ -43,10 +49,17 @@ public class CalculateSales {
 		Map<String, String> branchNames = new HashMap<>();
 		// 支店コードと売上金額を保持するMap
 		Map<String, Long> branchSales = new HashMap<>();
+		// new商品コードと商品名を保持するマップ
+
 		// 支店定義ファイル読み込み処理
 		if(!readFile(args[0], FILE_NAME_BRANCH_LST, branchNames, branchSales)) {
 			return;
 		}
+		//new商品定義ファイルの読み込み処理
+//		if(!readFile(args[0], FILE_NAME_COMMODITY_LIST, branchNames, branchSales)) {
+//			return;
+//		}
+
 		File[] files = new File(args[0]).listFiles();
 		List<File> rcdFiles = new ArrayList<>();
 		for(int i = 0; i < files.length; i++) {
@@ -75,7 +88,7 @@ public class CalculateSales {
 				while((line = br.readLine()) != null) {
 					saleList.add(line);
 				}
-				//売り上げファイルが2行じゃないときのエラー処理
+				//new売り上げファイルが3行じゃないときのエラー処理
 				if(saleList.size() != 2) {
 					System.out.println(rcdFiles.get(i).getName() + SALEFILE_INVALID_FORMAT);
 					return;
@@ -112,10 +125,15 @@ public class CalculateSales {
 				}
 			}
 		}
-		// 支店別集計ファイル書き込み処理
+		// 支店別集計ファイル書き込み処理、new商品別ファイル書き込み処理
 		if(!writeFile(args[0], FILE_NAME_BRANCH_OUT, branchNames, branchSales)) {
 			return;
 		}
+
+//		if(!writeFile(args[0], FILE_NAME_COMMODITY_OUT, branchNames, branchSales)) {
+//			return;
+//		}
+
 	}
 
 	/**
@@ -146,6 +164,8 @@ public class CalculateSales {
 					System.out.println(FILE_INVALID_FORMAT);
 					return false;
 				}
+
+			//new商品定義のマップも追加
 				branchNames.put(items[0], items[1]);
 				branchSales.put(items[0], (long)0);
 			}
@@ -187,13 +207,8 @@ public class CalculateSales {
 			bw = new BufferedWriter(fw);
 			//すべての支店を書き込むまで繰り返し
 			for(String key : branchNames.keySet()) {
-				//支店の書き込み
-				bw.write(key);
-				bw.write(",");
-				bw.write(branchNames.get(key));
-				bw.write(",");
-				String longString = String.valueOf(branchSales.get(key));
-				bw.write(longString);
+				//支店の書き込み,new商品の書き込み
+				bw.write(key + "," + branchNames.get(key) + "," + branchSales.get(key));
 				bw.newLine();
 			}
 		} catch(IOException e) {
