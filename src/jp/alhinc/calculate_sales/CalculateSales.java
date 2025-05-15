@@ -98,7 +98,7 @@ public class CalculateSales {
 				    System.out.println(rcdFiles.get(i).getName() + BRANCHCODE_INVALID_FORMAT);
 				    return;
 				}
-				if(!branchNames.containsKey(saleList.get(1))) {
+				if(!commodityNames.containsKey(saleList.get(1))) {
 				    System.out.println(rcdFiles.get(i).getName() +COMMODITYCODE_INVALID_FORMAT);
 				    return;
 				}
@@ -173,7 +173,7 @@ public class CalculateSales {
 					System.out.println(COMMODITYFILE_INVALID_FORMAT);
 					return false;
 				}
-			//商品定義のマップも追加
+
 				branchNames.put(items[0], items[1]);
 				branchSales.put(items[0], (long)0);
 				commodityNames.put(items[0], items[1]);
