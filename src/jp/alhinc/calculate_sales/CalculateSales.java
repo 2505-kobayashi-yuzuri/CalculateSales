@@ -47,6 +47,10 @@ public class CalculateSales {
 			return;
 		}
 		File[] files = new File(args[0]).listFiles();
+		if (args.length != 1) {
+			System.out.println(UNKNOWN_ERROR);
+			return;
+		}
 		List<File> rcdFiles = new ArrayList<>();
 		for(int i = 0; i < files.length; i++) {
 			if(files[i].isFile() && files[i].getName().matches("^[0-9]{8}.rcd$")) {
