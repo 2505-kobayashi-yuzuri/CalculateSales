@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class CalculateSales {
 	private static final String FILE_INVALID_FORMAT = "支店定義ファイルのフォーマットが不正です";
 	private static final String FILE_NOT_CONTINUOUS = "売上ファイル名が連番になっていません";
 	private static final String AMOUNT_DIGIT_OVER = "合計⾦額が10桁を超えました";
-	private static final String BURANCHCODE_INVALID_FORMAT = "の支店コードが不正です";
+	private static final String BRANCHCODE_INVALID_FORMAT = "の支店コードが不正です";
 	private static final String SALEFILE_INVALID_FORMAT ="のフォーマットが不正です";
 	/**
 	 * メインメソッド
@@ -47,10 +48,6 @@ public class CalculateSales {
 			return;
 		}
 		File[] files = new File(args[0]).listFiles();
-		if (args.length != 1) {
-			System.out.println(UNKNOWN_ERROR);
-			return;
-		}
 		List<File> rcdFiles = new ArrayList<>();
 		for(int i = 0; i < files.length; i++) {
 			if(files[i].isFile() && files[i].getName().matches("^[0-9]{8}.rcd$")) {
@@ -58,16 +55,15 @@ public class CalculateSales {
 			}
 		}
 		//ファイルが連番ではないときのエラー処理
-		for(int i = 0; i < rcdFiles.size() - 1; i++) {
+		Collections.sort(rcdFiles);
+		for(int i = 0; i < rcdFiles.size() -1; i++) {
 			int former = Integer.parseInt(rcdFiles.get(i).getName().substring(0, 8));
 			int latter = Integer.parseInt(rcdFiles.get(i + 1).getName().substring(0, 8));
-
 			if((latter - former) != 1) {
 				System.out.println(FILE_NOT_CONTINUOUS);
 				return;
 			}
 		}
-
 		//rcdファイル数分繰り返す
 		for(int i = 0; i < rcdFiles.size(); i++) {
 			BufferedReader br = null;
@@ -86,7 +82,7 @@ public class CalculateSales {
 				}
 				//売り上げファイルの支店コードが支店定義ファイルにないときのエラー処理
 				if(!branchNames.containsKey(saleList.get(0))) {
-				    System.out.println(rcdFiles.get(i).getName() + BURANCHCODE_INVALID_FORMAT);
+				    System.out.println(rcdFiles.get(i).getName() + BRANCHCODE_INVALID_FORMAT);
 				    return;
 				}
 				//売り上げ金額が数字ではないときのエラー処理
@@ -137,8 +133,8 @@ public class CalculateSales {
 		try {
 			File file = new File(path, fileName);
 			if(!file.exists()) {
-			   System.out.println(FILE_NOT_EXIST);
-			   return false;
+				System.out.println(FILE_NOT_EXIST);
+				return false;
 			}
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);
@@ -147,11 +143,11 @@ public class CalculateSales {
 			while((line = br.readLine()) != null) {
 				String[] items = line.split(",");
 				if((items.length != 2)||(!items[0].matches("^[0-9]{3}$"))) {
-			    	System.out.println(FILE_INVALID_FORMAT);
-			    	return false;
-			    }
+					System.out.println(FILE_INVALID_FORMAT);
+					return false;
+				}
 				branchNames.put(items[0], items[1]);
-			    branchSales.put(items[0], (long)0);
+				branchSales.put(items[0], (long)0);
 			}
 		} catch(IOException e) {
 			System.out.println(UNKNOWN_ERROR);
