@@ -33,6 +33,7 @@ public class CalculateSales {
 	 * @param コマンドライン引数
 	 */
 	public static void main(String[] args) {
+		//コマンドライン引数が１つではないときのエラー処理
 		if (args.length != 1) {
 			System.out.println(UNKNOWN_ERROR);
 			return;
