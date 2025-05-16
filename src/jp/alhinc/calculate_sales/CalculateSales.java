@@ -171,7 +171,6 @@ public class CalculateSales {
 					System.out.println(invalidFormat);
 					return false;
 				}
-
 				namesMap.put(items[0], items[1]);
 				salesMap.put(items[0], (long)0);
 			}
