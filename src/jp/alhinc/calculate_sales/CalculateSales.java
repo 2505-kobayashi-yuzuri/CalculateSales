@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CalculateSales {
-
 	// 支店定義ファイル名
 	private static final String FILE_NAME_BRANCH_LST = "branch.lst";
 	// 支店別集計ファイル名
@@ -22,7 +21,6 @@ public class CalculateSales {
 	private static final String FILE_NAME_COMMODITY_LIST = "commodity.lst";
 	//new商品別ファイル名
 	private static final String FILE_NAME_COMMODITY_OUT = "commodity.out";
-
 	// エラーメッセージ
 	private static final String UNKNOWN_ERROR = "予期せぬエラーが発生しました";
 	private static final String NOT_EXIST = "が存在しません";
@@ -60,7 +58,6 @@ public class CalculateSales {
 		if(!readFile(args[0], FILE_NAME_COMMODITY_LIST, commodityList, commodityNames, commoditySales, commodityRegex)) {
 			return;
 		}
-
 		File[] files = new File(args[0]).listFiles();
 		List<File> rcdFiles = new ArrayList<>();
 		for(int i = 0; i < files.length; i++) {
@@ -191,7 +188,6 @@ public class CalculateSales {
 		}
 		return true;
 	}
-
 	/**
 	 * 集計ファイル書き込み処理
 	 *
