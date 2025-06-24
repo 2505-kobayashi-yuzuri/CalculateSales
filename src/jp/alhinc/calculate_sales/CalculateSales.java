@@ -8,9 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CalculateSales {
 	// 支店定義ファイル名
@@ -101,6 +104,7 @@ public class CalculateSales {
 					return;
 				}
 				//売り上げ金額が数字ではないときのエラー処理
+				//一回
 				if(!saleList.get(2).matches("^[0-9]+$")) {
 					System.out.println(UNKNOWN_ERROR);
 					return;
@@ -226,4 +230,47 @@ public class CalculateSales {
 		}
 		return true;
 	}
+
+	public static boolean outFileWrite(String dirPath, String fileName, Map<String, String> names, Map<String, Long> sales) {
+		BufferedWriter bw = null;
+		HashMap<String, Long> sales;
+		//  List 生成 (ソート用)
+//		List<Map.Entry<String,Long>> entries = new ArrayList<Map.Entry<String,Long>>(sales.entrySet());
+//		Collections.sort(entries, new Comparator<Map.Entry<String,Long>>() {
+//			@Override
+//			public int compare(	Entry<String,Long> entry1, Entry<String,Long> entry2 ) {
+//				return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
+//			}
+//		});
+
+		Map<String, Long> result = sales.entrySet().stream()
+				.sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+						(oldValue, newValue) -> oldValue, LinkedHashMap::new));
+		// ファイル出力
+		try {
+			File file = new File(dirPath, fileName);
+			bw = new BufferedWriter( new FileWriter(file) );
+			for (String key: result.keySet()) {
+				bw.write(key + "," + result.get(key) + "," + result.get(key));
+				bw.newLine();
+			}
+
+		} catch (IOException e) {
+			System.out.println("予期せぬエラーが発生しました");
+			return false;
+		} finally {
+			try {
+				if( bw != null ){
+					bw.close();
+				}
+			} catch (IOException e) {
+				System.out.println("予期せぬエラーが発生しました");
+				return false;
+			}
+
+		}
+		return true;
+	}
+
 }
